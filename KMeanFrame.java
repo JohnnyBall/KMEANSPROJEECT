@@ -131,6 +131,9 @@ public class KMeanFrame extends JFrame implements ActionListener
     System.out.println("clusterValues: "+ clusterValues.toString());
   }// ennd of initialize points
 //=================================================================================================================
+    /*This function will do the Kmeans calculation 
+   *
+   */
   public void kmeansAlg()
   {
     int minIndex;
@@ -140,8 +143,8 @@ public class KMeanFrame extends JFrame implements ActionListener
     Point  tmpMeanPoint;
     for(int i = 0; i < clusterVector.size(); i++)// iterates through the vectors of clusters
         {
-            System.out.println("clusterVector.get(i).size(): "+clusterVector.get(i).size());
-            for(int j = 0; j < clusterVector.get(i).size();j++)// iterates through the vector of vector points
+            //System.out.println("clusterVector.get(i).size(): "+clusterVector.get(i).size());
+            for(int j = 0; j < clusterVector.get(i).size(); j++)// iterates through the vector of vector points
             {
                tmpPoint = clusterVector.get(i).get(j);
                minValue = 100.0;
@@ -151,9 +154,16 @@ public class KMeanFrame extends JFrame implements ActionListener
                   tmpMeanPoint = meanVector.get(k);
                   System.out.println("tmpPoint: "+tmpPoint.toString());
                   System.out.println("tmpMeanPoint: "+tmpMeanPoint.toString());
+
+                  /*The line below this calculates the Euclidean distance of the points, between the mean and the point being checked*/
                   kmeansCalc = Math.sqrt(((tmpPoint.getX()-tmpMeanPoint.getX())*(tmpPoint.getX()-tmpMeanPoint.getX()))+
                                             ((tmpPoint.getY()-tmpMeanPoint.getY())*(tmpPoint.getY()-tmpMeanPoint.getY())));
+
+
                   System.out.println("kmeansCalc: "+kmeansCalc);
+                  /** this if will check to see if the value calculated is a smaller distance, if it is then it will store its index of the mean and the value
+                   *  so that it can be updated after all of the checks/calculations have been made.
+                   */
                   if(minValue > kmeansCalc)
                   {
                     System.out.println("NEW K MEANS FOR CLUSTER "+ k+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -161,15 +171,18 @@ public class KMeanFrame extends JFrame implements ActionListener
                     minIndex = k;
                     System.out.println("replacing minValue:"+minValue+ " with: "+kmeansCalc);
                     minValue = kmeansCalc;
-                  }
-                  //
+                  }// end of if
                }// end of meanVector for loop
 
+               
             }// end of for(int j
         }//end of for(int i
 
   }//end of kmeansAlg()
 //=================================================================================================================
+    /*This function will setup the chart and draw it
+   *
+   */
   public void chartUpdate()
   {
         XYChart.Series tmpSeries;
