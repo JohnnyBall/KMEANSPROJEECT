@@ -10,6 +10,8 @@
  *FURTHER NOTE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * If exception occurs, sorry. Im having different results compiling on different devices... I've never used JavaFX before, and im having issues.
  *
+ *ALSO TRY USING THE NEWEST VERSION OF THE JAVA JDK (IM USING jdk1.8.0_92)
+ *
  */
 import java.io.*;
 import java.awt.*;
@@ -161,14 +163,14 @@ public class KMeanFrame extends JFrame implements ActionListener
     Point2D  tmpPoint;
     Point2D  tmpMeanPoint;
 
-    Vector<Point2D> tmpMeanVector = meanVector;// sets up the mean vector for comparison after recalculation
+
 ///------------------------------------------------------------------------------------------------------------------------
     /*The area between these separations will move the points to the appropriate clusters depending on the means
      *
      */
     for(int i = 0; i < clusterVector.size(); i++)// iterates through the vectors of clusters
         {
-            //System.out.println("clusterVector.get(i).size(): "+clusterVector.get(i).size());
+            System.out.println("clusterVector.get(i).size(): "+clusterVector.get(i).toString());
             for(int j = (clusterVector.get(i).size()-1); j >= 0; j--)// iterates through the vector of vector points
             {
                tmpPoint = clusterVector.get(i).get(j);
@@ -177,38 +179,36 @@ public class KMeanFrame extends JFrame implements ActionListener
                for(int k = 0; k < meanVector.size();k++)
                {
                   tmpMeanPoint = meanVector.get(k);
-                  System.out.print("Checking distance between tmpPoint: "+tmpPoint.toString()+ " and tmpMeanPoint:" +tmpMeanPoint.toString());
+                  System.out.print("Checking distance between tmpPoint: " + tmpPoint.toString()+ " and tmpMeanPoint: " + tmpMeanPoint.toString());
                   /*The line below this calculates the Euclidean distance of the points, between the mean and the point being checked*/
                   kmeansCalc = Math.sqrt(((tmpPoint.getX()-tmpMeanPoint.getX())*(tmpPoint.getX()-tmpMeanPoint.getX()))+
                                             ((tmpPoint.getY()-tmpMeanPoint.getY())*(tmpPoint.getY()-tmpMeanPoint.getY())));
 
 
-                  System.out.println(" Calculated kmeansCalc: "+kmeansCalc);
+                  System.out.println(" Calculated kmeansCalc: "+ kmeansCalc);
                   /** this if will check to see if the value calculated is a smaller distance, if it is then it will store its index of the mean and the value
                    *  so that it can be updated after all of the checks/calculations have been made.
                    */
                   if(minValue > kmeansCalc)
                   {
-                    System.out.println("NEW K MEANS FOR CLUSTER "+ k+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    System.out.print("replacing minIndex:"+minIndex+ " with: "+k);
+                    System.out.println("NEW K MEANS FOR CLUSTER "+ k + " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    System.out.print(" replacing minIndex:"+minIndex+ " with: " + k);
                     minIndex = k;
-                    System.out.println("replacing minValue:"+minValue+ " with: "+kmeansCalc);
+                    System.out.println(" replacing minValue:"+minValue+ " with: "+kmeansCalc);
                     minValue = kmeansCalc;
                     System.out.println("");
                     System.out.println("");
                   }// end of if
                }// end of meanVector for loop
 
-                if(minIndex != j)
+                if(minIndex != i)
                 {
 
-                    System.out.println("MIN INDEX DID NOT EQUAL J!!!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    System.out.println("Placing tmpPoint in new vector, min index and i didnt match: minIndex: "+minIndex+" i:"+i);
                     clusterVector.get(i).remove(j);
                     clusterVector.get(minIndex).add(tmpPoint);// resets the temp point into its new position
                 }
             }// end of for(int j
-
-            System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ITERATION THROUGH SECOND LIST$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         }//end of for(int i
 ///------------------------------------------------------------------------------------------------------------------------
 /* This section will calculate the new means based on the values of the numbers stored in the vectors
@@ -242,7 +242,7 @@ public class KMeanFrame extends JFrame implements ActionListener
         final NumberAxis yAxis = new NumberAxis(0, 20, 1);
         Point2D tmpPoint;
         Vector <XYChart.Series> seriesVector;
-        System.out.println("Setting up scatter chart");
+        //System.out.println("Setting up scatter chart");
         ScatterChart<Number,Number> scatterChart = new ScatterChart<Number,Number>(xAxis,yAxis);
 
         xAxis.setLabel("X-Values");
@@ -256,11 +256,11 @@ public class KMeanFrame extends JFrame implements ActionListener
         {
             tmpSeries = new XYChart.Series();
             tmpSeries.setName("cluster " + (i+1));
-            System.out.println("clusterVector.get(i).size(): "+clusterVector.get(i).size());
+            //System.out.println("clusterVector.get(i).size(): "+clusterVector.get(i).size());
             for(int j = 0; j < clusterVector.get(i).size();j++)// iterates through the vector of vector points
             {
              tmpPoint = clusterVector.get(i).get(j);
-             System.out.println("tmpPoint: "+tmpPoint.toString());
+            // System.out.println("tmpPoint: "+tmpPoint.toString());
              tmpSeries.getData().add(new XYChart.Data(tmpPoint.getX(), tmpPoint.getY()));//series1.getData().add(new XYChart.Data(4.2, 19.2));
             }
             seriesVector.add(i,tmpSeries);
@@ -272,12 +272,12 @@ public class KMeanFrame extends JFrame implements ActionListener
         for(int k=0;k<meanVector.size();k++)
         {
             tmpPoint = meanVector.get(k);
-            System.out.println("tmpPoint: "+tmpPoint.toString());
+            //System.out.println("tmpPoint: "+tmpPoint.toString());
             meanSeries.getData().add(new XYChart.Data(tmpPoint.getX(), tmpPoint.getY()));//series1.getData().add(new XYChart.Data(4.2, 19.2));
         }
 //----------------------------------------------------------------------------------------
 
-        System.out.println("seriesVector.size(): "+seriesVector.size());
+       // System.out.println("seriesVector.size(): "+seriesVector.size());
         for(int i =0; i < seriesVector.size(); i++)// adds the points to the graph
         {
             scatterChart.getData().add(seriesVector.get(i));
@@ -291,7 +291,6 @@ public class KMeanFrame extends JFrame implements ActionListener
 
   public static void main (String args[])
   {
-    System.out.println("Starting Application...");
     SwingUtilities.invokeLater(new Runnable()
     {
         @Override public void run()
@@ -299,7 +298,6 @@ public class KMeanFrame extends JFrame implements ActionListener
             new KMeanFrame();
         }
     });
-    System.out.println("Started");
   }
 //=================================================================================================================
 }// class end
